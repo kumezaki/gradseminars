@@ -1,12 +1,3 @@
-function req_fulfilled(req_ID, course_ID,     i)
-{
-	# NOTE: for now any first course # match returns true
-	for (i = 0; Req[req_ID,i] != ""; i++)
-		if (Req[req_ID,i] == CNu[course_ID]) return 1;
-
-	return 0;
-}
-
 function print_set_lengths(     i)
 {
 	printf("### ")
@@ -16,7 +7,7 @@ function print_set_lengths(     i)
 	return
 }
 
-function print_set_elements(     i,j,q,s,pos)
+function print_set_elements(     i,j,c,q,r,s,pos)
 {
 	for (i = 1; i <= Ce; i++)
 		C[i] = i;
@@ -34,46 +25,7 @@ function print_set_elements(     i,j,q,s,pos)
 			printf("%d ",CNu[C[set[q,i]]])
 			CQ[C[set[q,i]]]=q;
 		}
-		
-		# sum course units for each student
-		if (0)
-		{
-			printf("| ")
-			for (SID = 0; SID < length(SN); SID++)
-			{
-				printf("|%s ",SIn[SID])
-				for (Ropt_i = 0; SCopt[SID,Ropt_i,0] != ""; Ropt_i++)
-				{
-					for (i = 0; SCopt[SID,Ropt_i,i] != ""; i++)
-						printf("[%d] %d ",i,CNu[SCopt[SID,Ropt_i,i]])
-				}
-			}
-		}
-		
-		if (0)
-		{
-			cu_total = 0;
-			reqs_fulfilled = 0;
-			for (i = Q[q]; i > 0; i--)
-			{
-				course_ID = C[set[q,i]]
-				for (r = 0; Sreq[SID,r] != ""; r++)
-				{
-					req_ID = Sreq[SID,r]
-					# NOTE: not keeping track of "claimed" requirements
-					if (req_fulfilled(req_ID, course_ID))
-					{
-						cu_total += CU[course_ID]
-						reqs_fulfilled++;
-					}
-				}
-			}
-			diff = cu_total+SU[SID,q]-SU_OPT;
-			if (diff > 0)
-				cu_total_over += diff;
-			printf("%s: [%d] %d+%d-%d=%d ",SIn[SID],reqs_fulfilled,cu_total,SU[SID,q],SU_OPT,diff)
-		}
-		
+				
 		# create index to set_comp elements array
 		delete tmp;
 		pos = 1;
@@ -87,7 +39,6 @@ function print_set_elements(     i,j,q,s,pos)
 		
 		printf("} ");
 	}
-#	printf("%d",cu_total_over)
 	print
 
 	# for each requirement option
@@ -110,7 +61,7 @@ function print_set_elements(     i,j,q,s,pos)
 			
 			for (c = 0; Rpermu[r,s,c] != ""; c++)
 			{
-				c_pos = SCopt[s,SRopt[s],c]
+				c_pos = Rpermu[r,s,c]
 				tmp_SU[CQ[c_pos]] += CU[CQ[c_pos]]
 				printf(" %d(%dQ:%dU)",CNu[c_pos],CQ[c_pos],CU[CQ[c_pos]])
 			}
@@ -150,30 +101,6 @@ function foo(slots, num_elems,     i)
 	}
 }
 
-function goo(q,pos,Cs,Ce,     i)
-{
-#	print q,pos,Cs,Ce
-	
-	if (pos==0)
-	{
-		set_comp[q,pos,0] = Cs;
-		set_comp[q,pos,1] = Ce;
-		if (q>1)
-			goo(q-1,Q[q-1],1,Ce-Q[q])
-		else
-			print_set_elements();
-		return;
-	}
-	else
-		for (i = Cs; i <= (Ce-pos+1); i++)
-		{
-			set[q,pos] = i
-			set_comp[q,pos,0] = Cs;
-			set_comp[q,pos,1] = i-1;
-			goo(q,pos-1,i+1,Ce)
-		}
-}
-
 function hoo(SID,r,     i,j)
 {
 	if (Sreq[SID,r] == "")
@@ -201,14 +128,47 @@ function hoo(SID,r,     i,j)
 	}
 }
 
+function goo(q,pos,Cs,Ce,     i)
+{
+#	print q,pos,Cs,Ce
+	
+	if (pos==0)
+	{
+		set_comp[q,pos,0] = Cs;
+		set_comp[q,pos,1] = Ce;
+		if (q>1)
+			goo(q-1,Q[q-1],1,Ce-Q[q])
+		else
+			print_set_elements();
+		return;
+	}
+	else
+		for (i = Cs; i <= (Ce-pos+1); i++)
+		{
+			set[q,pos] = i
+			set_comp[q,pos,0] = Cs;
+			set_comp[q,pos,1] = i-1;
+			goo(q,pos-1,i+1,Ce)
+		}
+}
+
 function ioo(SID,     Ropt_i,s,c)
 {
 	if (SID == length(SN))
 	{
+#		printf("%d ",Rpermu_i)
 		for (s = 0; s < SID; s++)
+		{
+#			printf("[%s:",SIn[s])
 			for (c = 0; SCopt[s,SRopt[s],c] != ""; c++)
+			{
+#				printf(" %d",CNu[SCopt[s,SRopt[s],c]])
 				Rpermu[Rpermu_i,s,c] = SCopt[s,SRopt[s],c]
+			}
+#			printf("]")
+		}
 		Rpermu_i++
+#		print
 		return
 	}
 		
@@ -236,8 +196,8 @@ BEGIN {
 	SID = 0
 	SN[SID] = "Gerrard, Jonathan"; SIn[SID] = "JG"
 	SU[SID,3] = 7; SU[SID,2] = 11; SU[SID,1] = 7;
-	Sreq[SID,0] = 4
-	Sreq[SID,1] = 1
+	Sreq[SID,0] = 1
+	Sreq[SID,1] = 4
 
 	SID = 1
 	SN[SID] = "Watson, Jordan"; SIn[SID] = "JW"
@@ -288,9 +248,9 @@ BEGIN {
 		printf("%d ",r)
 		for (s = 0; s < length(SN); s++)
 		{
-			printf("[%s: ",SIn[s])
+			printf("[%s:",SIn[s])
 			for (c = 0; Rpermu[r,s,c] != ""; c++)
-				printf("%d ",CNu[SCopt[s,SRopt[s],c]])
+				printf(" %d",CNu[Rpermu[r,s,c]])
 			printf("]")
 		}
 		print
