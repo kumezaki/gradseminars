@@ -1,8 +1,8 @@
 function print_set_lengths(     i)
 {
 	printf("### ")
-	for (i = lengthQ; i > 0; i--)
-		printf("%d%s",Q[i],i>1?" ":"")
+	for (q = 0; q < lengthQ; q++)
+		printf("%d%s",Q[q],(q+1)<lengthQ?" ":"")
 	printf(" ###\n")
 	return
 }
@@ -15,7 +15,7 @@ function print_set_elements(     i,j,c,q,r,s,pos)
 	cu_total_over = 0;
 	
 	# for each quarter
-	for (q = 1; q <= lengthQ; q++)
+	for (q = 0; q < lengthQ; q++)
 	{
 		printf("{ ");
 
@@ -53,23 +53,23 @@ function print_set_elements(     i,j,c,q,r,s,pos)
 			printf(" [%s:",SIn[s])
 
 			delete tmp_SU
-			for (q = 1; q <= lengthQ; q++)
+			for (q = 0; q < lengthQ; q++)
 			{
 				tmp_SU[q] = SU[s,q]
-				printf("%s%d",q==1?" ":"|",tmp_SU[q])
+				printf("%s%d",q==0?" ":"|",tmp_SU[q])
 			}
 			
 			for (c = 0; Rpermu[r,s,c] != ""; c++)
 			{
 				c_pos = Rpermu[r,s,c]
 				tmp_SU[CQ[c_pos]] += CU[CQ[c_pos]]
-				printf(" %d(%dQ:%dU)",CNu[c_pos],CQ[c_pos],CU[CQ[c_pos]])
+				printf(" %d(Q%d:%dU)",CNu[c_pos],CQ[c_pos],CU[c_pos])
 			}
 
-			for (q = 1; q <= lengthQ; q++)
+			for (q = 0; q < lengthQ; q++)
 			{
 				diff = tmp_SU[q] - SU_OPT;
-				printf("%s%d%s",q==1?" ":"|",tmp_SU[q],diff>0?"*":"")
+				printf("%s%d%s",q==0?" ":"|",tmp_SU[q],diff>0?"*":"")
 				if (diff > 0)
 					cu_total_over += diff;
 			}
@@ -83,13 +83,13 @@ function print_set_elements(     i,j,c,q,r,s,pos)
 
 function foo(q,num_c,     c)
 {
-	if (q == lengthQ)
+	if ((q+1) == lengthQ)
 	{
 		Q[q] = num_c;
 		print_set_lengths();
 
 		Ce = lengthC
-		goo(1,Q[1],1,Ce);
+		goo(0,Q[0],1,Ce);
 	
 		return;
 	}
@@ -109,7 +109,7 @@ function goo(q,pos,Cs,Ce,     i)
 	{
 		set_comp[q,pos,0] = Cs;
 		set_comp[q,pos,1] = Ce;
-		if (q<lengthQ)
+		if ((q+1)<lengthQ)
 			goo(q+1,Q[q+1],1,Ce-Q[q])
 		else
 			print_set_elements();
@@ -187,22 +187,22 @@ BEGIN {
 	SU_OPT = 12;
 
 	# requirements
-	Req[1,0] = 220;
-	Req[2,0] = 236;
-	Req[3,0] = 230; Req[3,1] = 236;
-	Req[4,0] = 220; Req[4,1] = 230; Req[4,2] = 235; Req[4,3] = 236;
+	Req[0,0] = 220;
+	Req[1,0] = 236;
+	Req[2,0] = 230; Req[2,1] = 236;
+	Req[3,0] = 220; Req[3,1] = 230; Req[3,2] = 235; Req[3,3] = 236;
 	
 	# student info
 	SID = 0
 	SN[SID] = "Gerrard, Jonathan"; SIn[SID] = "JG"
-	SU[SID,1] = 7; SU[SID,2] = 11; SU[SID,3] = 7;
-	Sreq[SID,0] = 1
-	Sreq[SID,1] = 4
+	SU[SID,0] = 7; SU[SID,1] = 11; SU[SID,2] = 7;
+	Sreq[SID,0] = 0
+	Sreq[SID,1] = 3
 
 	SID = 1
 	SN[SID] = "Watson, Jordan"; SIn[SID] = "JW"
-	SU[SID,1] = 7; SU[SID,2] = 13; SU[SID,3] = 7;
-	Sreq[SID,0] = 3
+	SU[SID,0] = 7; SU[SID,1] = 13; SU[SID,2] = 7;
+	Sreq[SID,0] = 2
 	
 	# courses being offered
 	CNu[1] = 201; CNa[1] = "Schenkerian Analysis"; CU[1] = 4;
@@ -223,7 +223,7 @@ BEGIN {
 		print SN[SID]
 
 		# print committed units for each quarter
-		for (q = 1; q <= lengthQ; q++)
+		for (q = 0; q < lengthQ; q++)
 			print(SU[SID,q])
 
 		# print course number(s) for each requirement
@@ -257,7 +257,7 @@ BEGIN {
 	}
 	print
 		
-	foo(1,lengthC)
+	foo(0,lengthC)
 #	print
 }
 
