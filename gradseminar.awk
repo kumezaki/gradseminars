@@ -62,7 +62,7 @@ function print_set_elements(     i,j,c,q,r,s,pos)
 			for (c = 0; Rpermu[r,s,c] != ""; c++)
 			{
 				c_pos = Rpermu[r,s,c]
-				tmp_SU[CQ[c_pos]] += CU[CQ[c_pos]]
+				tmp_SU[CQ[c_pos]] += CU[c_pos]
 				printf(" %d(Q%d:%dU)",CNu[c_pos],CQ[c_pos],CU[c_pos])
 			}
 
@@ -196,13 +196,22 @@ BEGIN {
 	SID = 0
 	SN[SID] = "Gerrard, Jonathan"; SIn[SID] = "JG"
 	SU[SID,0] = 7; SU[SID,1] = 11; SU[SID,2] = 7;
-	Sreq[SID,0] = 0
-	Sreq[SID,1] = 3
+	Sreq[SID,0] = 3
 
 	SID = 1
 	SN[SID] = "Watson, Jordan"; SIn[SID] = "JW"
 	SU[SID,0] = 7; SU[SID,1] = 13; SU[SID,2] = 7;
 	Sreq[SID,0] = 2
+
+	SID = 2
+	SN[SID] = "Cheng, Michele"; SIn[SID] = "MC"
+	SU[SID,0] = 7; SU[SID,1] = 13; SU[SID,2] = 7;
+	Sreq[SID,0] = 2
+
+	SID = 3
+	SN[SID] = "Jones, Molly"; SIn[SID] = "MJ"
+	SU[SID,0] = 6; SU[SID,1] = 12; SU[SID,2] = 6;
+	Sreq[SID,0] = 1
 	
 	# courses being offered
 	CNu[1] = 201; CNa[1] = "Schenkerian Analysis"; CU[1] = 4;
