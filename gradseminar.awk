@@ -15,7 +15,7 @@ function print_set_elements(     i,j,c,q,r,s,pos)
 	cu_total_over = 0;
 	
 	# for each quarter
-	for (q = lengthQ; q > 0; q--)
+	for (q = 1; q <= lengthQ; q++)
 	{
 		printf("{ ");
 
@@ -53,10 +53,10 @@ function print_set_elements(     i,j,c,q,r,s,pos)
 			printf(" [%s:",SIn[s])
 
 			delete tmp_SU
-			for (q = lengthQ; q > 0; q--)
+			for (q = 1; q <= lengthQ; q++)
 			{
 				tmp_SU[q] = SU[s,q]
-				printf("%s%d",q==lengthQ?" ":"|",tmp_SU[q])
+				printf("%s%d",q==1?" ":"|",tmp_SU[q])
 			}
 			
 			for (c = 0; Rpermu[r,s,c] != ""; c++)
@@ -66,10 +66,10 @@ function print_set_elements(     i,j,c,q,r,s,pos)
 				printf(" %d(%dQ:%dU)",CNu[c_pos],CQ[c_pos],CU[CQ[c_pos]])
 			}
 
-			for (q = lengthQ; q > 0; q--)
+			for (q = 1; q <= lengthQ; q++)
 			{
 				diff = tmp_SU[q] - SU_OPT;
-				printf("%s%d%s",q==lengthQ?" ":"|",tmp_SU[q],diff>0?"*":"")
+				printf("%s%d%s",q==1?" ":"|",tmp_SU[q],diff>0?"*":"")
 				if (diff > 0)
 					cu_total_over += diff;
 			}
@@ -81,24 +81,48 @@ function print_set_elements(     i,j,c,q,r,s,pos)
 	}
 }
 
-function foo(slots, num_elems,     i)
+function foo(q,num_c,     c)
 {
-	if (slots == 1)
+	if (q == lengthQ)
 	{
-		Q[slots] = num_elems;
+		Q[q] = num_c;
 		print_set_lengths();
 
 		Ce = lengthC
-		goo(lengthQ,Q[lengthQ],1,Ce);
+		goo(1,Q[1],1,Ce);
 	
 		return;
 	}
 
-	for (i = num_elems; i >= 0; i--)
+	for (c = num_c; c >= 0; c--)
 	{
-		Q[slots] = i;
-		foo(slots-1,num_elems-i);
+		Q[q] = c;
+		foo(q+1,num_c-c);
 	}
+}
+
+function goo(q,pos,Cs,Ce,     i)
+{
+#	print q,pos,Cs,Ce
+	
+	if (pos==0)
+	{
+		set_comp[q,pos,0] = Cs;
+		set_comp[q,pos,1] = Ce;
+		if (q<lengthQ)
+			goo(q+1,Q[q+1],1,Ce-Q[q])
+		else
+			print_set_elements();
+		return;
+	}
+	else
+		for (i = Cs; i <= (Ce-pos+1); i++)
+		{
+			set[q,pos] = i
+			set_comp[q,pos,0] = Cs;
+			set_comp[q,pos,1] = i-1;
+			goo(q,pos-1,i+1,Ce)
+		}
 }
 
 function hoo(SID,r,     i,j)
@@ -126,30 +150,6 @@ function hoo(SID,r,     i,j)
 				Cclaimed[j] = 0
 			}
 	}
-}
-
-function goo(q,pos,Cs,Ce,     i)
-{
-#	print q,pos,Cs,Ce
-	
-	if (pos==0)
-	{
-		set_comp[q,pos,0] = Cs;
-		set_comp[q,pos,1] = Ce;
-		if (q>1)
-			goo(q-1,Q[q-1],1,Ce-Q[q])
-		else
-			print_set_elements();
-		return;
-	}
-	else
-		for (i = Cs; i <= (Ce-pos+1); i++)
-		{
-			set[q,pos] = i
-			set_comp[q,pos,0] = Cs;
-			set_comp[q,pos,1] = i-1;
-			goo(q,pos-1,i+1,Ce)
-		}
 }
 
 function ioo(SID,     Ropt_i,s,c)
@@ -195,13 +195,13 @@ BEGIN {
 	# student info
 	SID = 0
 	SN[SID] = "Gerrard, Jonathan"; SIn[SID] = "JG"
-	SU[SID,3] = 7; SU[SID,2] = 11; SU[SID,1] = 7;
+	SU[SID,1] = 7; SU[SID,2] = 11; SU[SID,3] = 7;
 	Sreq[SID,0] = 1
 	Sreq[SID,1] = 4
 
 	SID = 1
 	SN[SID] = "Watson, Jordan"; SIn[SID] = "JW"
-	SU[SID,3] = 7; SU[SID,2] = 13; SU[SID,1] = 7;
+	SU[SID,1] = 7; SU[SID,2] = 13; SU[SID,3] = 7;
 	Sreq[SID,0] = 3
 	
 	# courses being offered
@@ -212,8 +212,8 @@ BEGIN {
 	lengthC = length(CNa)
 
 	# display info for each course
-	for (i = 1; i <= lengthC; i++)
-		print "["i"] "CNu[i],CNa[i],CU[i]
+	for (c = 1; c <= lengthC; c++)
+		print "["c"] "CNu[c],CNa[c],CU[c]
 	print
 	
 	# display info for each student
@@ -223,8 +223,8 @@ BEGIN {
 		print SN[SID]
 
 		# print committed units for each quarter
-		for (i = lengthQ; i > 0; i--)
-			print(SU[SID,i])
+		for (q = 1; q <= lengthQ; q++)
+			print(SU[SID,q])
 
 		# print course number(s) for each requirement
 		delete Cclaimed
@@ -233,8 +233,8 @@ BEGIN {
 		for (Ropt_i = 0; SCopt[SID,Ropt_i,0] != ""; Ropt_i++)
 		{
 			printf("Ropt_i %d: ",Ropt_i)
-			for (i = 0; SCopt[SID,Ropt_i,i] != ""; i++)
-				printf("[req %d] %s ",i,CNa[SCopt[SID,Ropt_i,i]])
+			for (c = 0; SCopt[SID,Ropt_i,c] != ""; c++)
+				printf("[req %d] %s ",c,CNa[SCopt[SID,Ropt_i,c]])
 			print
 		}
 		print
@@ -257,8 +257,8 @@ BEGIN {
 	}
 	print
 		
-	foo(lengthQ,lengthC)
-	print
+	foo(1,lengthC)
+#	print
 }
 
 {
