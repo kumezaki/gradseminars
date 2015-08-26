@@ -22,8 +22,11 @@ function print_quarter_elems(     i,j,q,pos)
 		# for each course (in quarter)
 		for (i = Q[q]; i > 0; i--)
 		{
-			printf("%d ",CNu[C[set[q,i]]])
-#			printf("%d ",C[set[q,i]])
+			c_pos = C[set[q,i]]
+			imp_c = Cimp[c_pos,q]
+			if (imp_c) num_imp_c++
+			printf("%d%s ",CNu[c_pos],imp_c?"*":"")
+#			printf("%d ",c_pos)
 			CQ[C[set[q,i]]]=q;
 		}
 				
@@ -38,7 +41,7 @@ function print_quarter_elems(     i,j,q,pos)
 		for (i = 0; i < pos; i++)
 			C[i] = tmp[i];
 		
-		printf("} ");
+		printf("}");
 	}
 	print
 }
@@ -118,8 +121,10 @@ function goo(q,pos,Cs,Ce,     i)
 			goo(q+1,Q[q+1],0,Ce-Q[q])
 		else
 		{
+			num_imp_c = 0;
 			print_quarter_elems()
-			print_req_calcs()
+			if (num_imp_c == 0)
+				print_req_calcs()
 		}
 		return;
 	}
@@ -225,7 +230,7 @@ BEGIN {
 	c = 0;
 	CNu[c] = 201; CNa[c] = "Schenkerian Analysis"; CU[c] = 4; c++;
 	CNu[c] = 220; CNa[c] = "Mahler"; CU[c] = 4; c++;
-	CNu[c] = 235; CNa[c] = "Critical Studies"; CU[c] = 4; c++;
+	CNu[c] = 235; CNa[c] = "Critical Studies"; CU[c] = 4; Cimp[c,0] = Cimp[c,2] = 1; c++;
 	CNu[c] = 236; CNa[c] = "Silk Road Music"; CU[c] = 4; c++;
 	lengthC = length(CNa)
 
