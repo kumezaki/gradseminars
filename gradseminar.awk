@@ -7,10 +7,10 @@ function print_set_lengths(     i)
 	return
 }
 
-function print_set_elements(     i,j,c,q,r,s,pos)
+function print_set_elements(     i,j,q,pos)
 {
 	for (i = 1; i <= Ce; i++)
-		C[i] = i;
+		C[i] = i-1;
 
 	cu_total_over = 0;
 	
@@ -22,7 +22,8 @@ function print_set_elements(     i,j,c,q,r,s,pos)
 		# for each course (in quarter)
 		for (i = Q[q]; i > 0; i--)
 		{
-			printf("%d ",CNu[C[set[q,i]]])
+#			printf("%d ",CNu[C[set[q,i]]])
+			printf("%d ",C[set[q,i]])
 			CQ[C[set[q,i]]]=q;
 		}
 				
@@ -40,7 +41,10 @@ function print_set_elements(     i,j,c,q,r,s,pos)
 		printf("} ");
 	}
 	print
+}
 
+function print_req_calcs(     r,s,c)
+{
 	# for each requirement option
 	for (r = 0; r < Rpermu_i; r++)
 	{
@@ -81,7 +85,8 @@ function print_set_elements(     i,j,c,q,r,s,pos)
 	}
 }
 
-function foo(q,num_c,     c)
+# creates all possible permutations of the number of courses per quarter
+function foo(q,num_c,     i)
 {
 	if ((q+1) == lengthQ)
 	{
@@ -94,10 +99,10 @@ function foo(q,num_c,     c)
 		return;
 	}
 
-	for (c = num_c; c >= 0; c--)
+	for (i = num_c; i >= 0; i--)
 	{
-		Q[q] = c;
-		foo(q+1,num_c-c);
+		Q[q] = i;
+		foo(q+1,num_c-i);
 	}
 }
 
@@ -112,7 +117,10 @@ function goo(q,pos,Cs,Ce,     i)
 		if ((q+1)<lengthQ)
 			goo(q+1,Q[q+1],1,Ce-Q[q])
 		else
+		{
 			print_set_elements();
+#			print_req_calcs();
+		}
 		return;
 	}
 	else
@@ -140,7 +148,7 @@ function hoo(SID,r,     i,j)
 	{
 		course_found_for_req = 0
 		# for each course
-		for (j = 1; j <= lengthC; j++)
+		for (j = 0; j < lengthC; j++)
 			# if it fulfills a req and is not already claimed
 			if (Req[Sreq[SID,r],i] == CNu[j] && (!Cclaimed[j]))
 			{
@@ -214,14 +222,15 @@ BEGIN {
 	Sreq[SID,0] = 1
 	
 	# courses being offered
-	CNu[1] = 201; CNa[1] = "Schenkerian Analysis"; CU[1] = 4;
-	CNu[2] = 220; CNa[2] = "Mahler"; CU[2] = 4;
-	CNu[3] = 235; CNa[3] = "Critical Studies"; CU[3] = 4;
-	CNu[4] = 236; CNa[4] = "Silk Road Music"; CU[4] = 4;
+	c = 0;
+	CNu[c] = 201; CNa[c] = "Schenkerian Analysis"; CU[c] = 4; c++;
+	CNu[c] = 220; CNa[c] = "Mahler"; CU[c] = 4; c++;
+	CNu[c] = 235; CNa[c] = "Critical Studies"; CU[c] = 4; c++;
+	CNu[c] = 236; CNa[c] = "Silk Road Music"; CU[c] = 4; c++;
 	lengthC = length(CNa)
 
 	# display info for each course
-	for (c = 1; c <= lengthC; c++)
+	for (c = 0; c < lengthC; c++)
 		print "["c"] "CNu[c],CNa[c],CU[c]
 	print
 	
