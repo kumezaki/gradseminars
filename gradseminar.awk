@@ -200,10 +200,14 @@ BEGIN {
 	SU_OPT = 12;
 
 	# requirements
-	Req[0,0] = 220;
-	Req[1,0] = 236;
-	Req[2,0] = 230; Req[2,1] = 236;
-	Req[3,0] = 220; Req[3,1] = 230; Req[3,2] = 235; Req[3,3] = 236;
+	r = 0
+	Req[r,0] = 0;
+	r = 1
+	Req[r,0] = 236;
+	r = 2
+	Req[r,0] = 230; Req[r,1] = 236;
+	r = 3
+	Req[r,0] = 220; Req[r,1] = 230; Req[r,2] = 235; Req[r,3] = 236;
 	
 	# student info
 	SID = 0
@@ -211,23 +215,34 @@ BEGIN {
 	SU[SID,0] = 7; SU[SID,1] = 11; SU[SID,2] = 7;
 	Sreq[SID,0] = 3
 
-	SID = 1
+	SID++
+	SN[SID] = "Okunev, Anna"; SIn[SID] = "AO"
+	SU[SID,0] = 6; SU[SID,1] = 12; SU[SID,2] = 6;
+	Sreq[SID,0] = 0
+
+	SID++
+	SN[SID] = "Caulkins, Anthony"; SIn[SID] = "AC"
+	SU[SID,0] = 7; SU[SID,1] = 13; SU[SID,2] = 7;
+	Sreq[SID,0] = 0
+
+	SID++
 	SN[SID] = "Watson, Jordan"; SIn[SID] = "JW"
 	SU[SID,0] = 7; SU[SID,1] = 13; SU[SID,2] = 7;
 	Sreq[SID,0] = 2
 
-	SID = 2
+	SID++
 	SN[SID] = "Cheng, Michele"; SIn[SID] = "MC"
 	SU[SID,0] = 7; SU[SID,1] = 13; SU[SID,2] = 7;
 	Sreq[SID,0] = 2
 
-	SID = 3
+	SID++
 	SN[SID] = "Jones, Molly"; SIn[SID] = "MJ"
 	SU[SID,0] = 6; SU[SID,1] = 12; SU[SID,2] = 6;
 	Sreq[SID,0] = 1
 	
 	# courses being offered
 	c = 0;
+	CNu[c] = 0; CNa[c] = "BLANK"; CU[c] = 0; c++;
 	CNu[c] = 201; CNa[c] = "Schenkerian Analysis"; CU[c] = 4; c++;
 	CNu[c] = 220; CNa[c] = "Mahler"; CU[c] = 4; c++;
 	CNu[c] = 235; CNa[c] = "Critical Studies"; CU[c] = 4; Cimp[c,0] = Cimp[c,2] = 1; c++;
