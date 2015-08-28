@@ -63,7 +63,7 @@ function print_req_calcs(     r,s,c)
 			for (q = 0; q < lengthQ; q++)
 			{
 				tmp_SU[q] = SU[s,q]
-				printf("%s%d",q==0?" ":"|",tmp_SU[q])
+#				printf("%s%d",q==0?" ":"|",tmp_SU[q])
 			}
 			
 			for (c = 0; Rpermu[r,s,c] != ""; c++)
@@ -208,12 +208,29 @@ BEGIN {
 	Req[r,0] = 230; Req[r,1] = 236;
 	r = 3
 	Req[r,0] = 220; Req[r,1] = 230; Req[r,2] = 235; Req[r,3] = 236;
+	r = 4
+	Req[r,0] = 131;
+	r = 5
+	Req[r,0] = "156A";
+	r = 6
+	Req[r,0] = "156C";
 	
 	# student info
 	SID = 0
+	SN[SID] = "Kwan, Adela"; SIn[SID] = "AK"
+	SU[SID,0] = 11; SU[SID,1] = 15; SU[SID,2] = 15;
+	Sreq[SID,0] = 0
+
+	SID++
+	SN[SID] = "Spaulding, Audrey"; SIn[SID] = "AS"
+	SU[SID,0] = 11; SU[SID,1] = 15; SU[SID,2] = 13;
+	Sreq[SID,0] = 0
+
+	SID++
 	SN[SID] = "Gerrard, Jonathan"; SIn[SID] = "JG"
 	SU[SID,0] = 7; SU[SID,1] = 11; SU[SID,2] = 7;
 	Sreq[SID,0] = 3
+	Sreq[SID,1] = 4
 
 	SID++
 	SN[SID] = "Okunev, Anna"; SIn[SID] = "AO"
@@ -243,6 +260,9 @@ BEGIN {
 	# courses being offered
 	c = 0;
 	CNu[c] = 0; CNa[c] = "BLANK"; CU[c] = 0; c++;
+	CNu[c] = 131; CNa[c] = "131 sub"; CU[c] = 4; c++;
+	CNu[c] = "156A"; CNa[c] = "156A sub"; CU[c] = 2; c++;
+	CNu[c] = "156C"; CNa[c] = "156C sub"; CU[c] = 2; c++;
 	CNu[c] = 201; CNa[c] = "Schenkerian Analysis"; CU[c] = 4; c++;
 	CNu[c] = 220; CNa[c] = "Mahler"; CU[c] = 4; c++;
 	CNu[c] = 235; CNa[c] = "Critical Studies"; CU[c] = 4; Cimp[c,0] = Cimp[c,2] = 1; c++;
