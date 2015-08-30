@@ -211,62 +211,88 @@ BEGIN {
 	r = 4
 	Req[r,0] = 131;
 	r = 5
-	Req[r,0] = "156A";
+	Req[r,0] = 1561;
 	r = 6
-	Req[r,0] = "156C";
+	Req[r,0] = 1563;
+	r = 7
+	Req[r,0] = 176;
 	
 	# student info
 	SID = 0
-	SN[SID] = "Kwan, Adela"; SIn[SID] = "AK"
-	SU[SID,0] = 11; SU[SID,1] = 15; SU[SID,2] = 15;
-	Sreq[SID,0] = 0
 
-	SID++
-	SN[SID] = "Spaulding, Audrey"; SIn[SID] = "AS"
-	SU[SID,0] = 11; SU[SID,1] = 15; SU[SID,2] = 13;
-	Sreq[SID,0] = 0
+#	SN[SID] = "Kwan, Adela"; SIn[SID] = "AK"
+#	SU[SID,0] = 11; SU[SID,1] = 15; SU[SID,2] = 15;
+#	Sreq[SID,0] = 5
+#	Sreq[SID,1] = 6
+#	SID++
 
-	SID++
+#	SN[SID] = "Spaulding, Audrey"; SIn[SID] = "AS"
+#	SU[SID,0] = 11; SU[SID,1] = 15; SU[SID,2] = 13;
+#	Sreq[SID,0] = 6
+#	SID++
+
 	SN[SID] = "Gerrard, Jonathan"; SIn[SID] = "JG"
 	SU[SID,0] = 7; SU[SID,1] = 11; SU[SID,2] = 7;
 	Sreq[SID,0] = 3
 	Sreq[SID,1] = 4
-
 	SID++
+
+#	SN[SID] = "Tsai, Cynthia"; SIn[SID] = "CT"
+#	SU[SID,0] = 12; SU[SID,1] = 8; SU[SID,2] = 12;
+#	Sreq[SID,0] = 0
+#	SID++
+
+#	SN[SID] = "Barb-Mingo, Evyn"; SIn[SID] = "EB-M"
+#	SU[SID,0] = 9; SU[SID,1] = 9; SU[SID,2] = 13;
+#	Sreq[SID,0] = 7
+#	SID++
+
 	SN[SID] = "Okunev, Anna"; SIn[SID] = "AO"
 	SU[SID,0] = 6; SU[SID,1] = 12; SU[SID,2] = 6;
 	Sreq[SID,0] = 0
-
 	SID++
+
 	SN[SID] = "Caulkins, Anthony"; SIn[SID] = "AC"
 	SU[SID,0] = 7; SU[SID,1] = 13; SU[SID,2] = 7;
 	Sreq[SID,0] = 0
-
 	SID++
+
 	SN[SID] = "Watson, Jordan"; SIn[SID] = "JW"
 	SU[SID,0] = 7; SU[SID,1] = 13; SU[SID,2] = 7;
 	Sreq[SID,0] = 2
-
 	SID++
+
 	SN[SID] = "Cheng, Michele"; SIn[SID] = "MC"
 	SU[SID,0] = 7; SU[SID,1] = 13; SU[SID,2] = 7;
 	Sreq[SID,0] = 2
-
 	SID++
+
 	SN[SID] = "Jones, Molly"; SIn[SID] = "MJ"
 	SU[SID,0] = 6; SU[SID,1] = 12; SU[SID,2] = 6;
 	Sreq[SID,0] = 1
+	SID++
 	
 	# courses being offered
 	c = 0;
 	CNu[c] = 0; CNa[c] = "BLANK"; CU[c] = 0; c++;
 	CNu[c] = 131; CNa[c] = "131 sub"; CU[c] = 4; c++;
-	CNu[c] = "156A"; CNa[c] = "156A sub"; CU[c] = 2; c++;
-	CNu[c] = "156C"; CNa[c] = "156C sub"; CU[c] = 2; c++;
-	CNu[c] = 201; CNa[c] = "Schenkerian Analysis"; CU[c] = 4; c++;
-	CNu[c] = 220; CNa[c] = "Mahler"; CU[c] = 4; c++;
+#	CNu[c] = 1561; CNa[c] = "156A sub"; CU[c] = 2; c++;
+#	CNu[c] = 1563; CNa[c] = "156C sub"; CU[c] = 2; c++;
+#	CNu[c] = 176; CNa[c] = "Large Ensemble"; CU[c] = 2; c++;
+	CNu[c] = 200; CNa[c] = "Bibliography"; Cimp[c,1] = Cimp[c,2] = 1; c++;
+	CNu[c] = 201; CNa[c] = "Theory"; CU[c] = 4; Cimp[c,0] = Cimp[c,2] = 1; c++;
+	CNu[c] = 209; CNa[c] = "Creative Practices"; Cimp[c,2] = 1; c++;
+	CNu[c] = 2151; CNa[c] = "Music Technology A"; Cimp[c,1] = Cimp[c,2] = 1; c++;
+	CNu[c] = 2152; CNa[c] = "Music Technology B"; Cimp[c,0] = Cimp[c,2] = 1; c++;
+	CNu[c] = 220; CNa[c] = "Mahler"; CU[c] = 4; Cimp[c,1] = Cimp[c,2] = 1; c++;
+	CNu[c] = 230; CNa[c] = "Contemporary Music Seminar"; CU[c] = 4; Cimp[c,0] = Cimp[c,1] = 1; c++;
 	CNu[c] = 235; CNa[c] = "Critical Studies"; CU[c] = 4; Cimp[c,0] = Cimp[c,2] = 1; c++;
-	CNu[c] = 236; CNa[c] = "Silk Road Music"; CU[c] = 4; c++;
+	CNu[c] = 236; CNa[c] = "Theory of World Musics"; CU[c] = 4; Cimp[c,0] = Cimp[c,1] = 1; c++;
+	CNu[c] = 237; CNa[c] = "Lukas tbd"; CU[c] = 4; Cimp[c,0] = Cimp[c,1] = 1; c++;
+	CNu[c] = 237; CNa[c] = "Persian Classical"; CU[c] = 4; Cimp[c,0] = Cimp[c,1] = 1; c++;
+	CNu[c] = 2391; CNa[c] = "ICIT Colloquium 2-unit"; CU[c] = 2; Cimp[c,0] = Cimp[c,2] = 1; c++;
+	CNu[c] = 2392; CNa[c] = "ICIT Colloquium 1-unit"; CU[c] = 1; Cimp[c,0] = Cimp[c,2] = 1; c++;
+	CNu[c] = 276; CNa[c] = "Contemporary Ensemble"; CU[c] = 2; Cimp[c,0] = 1; c++;
 	lengthC = length(CNa)
 
 	# display info for each course
