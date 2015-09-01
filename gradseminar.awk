@@ -9,6 +9,7 @@ function print_set_lengths(     i)
 
 function create_course_permuations(     i,j,q,pos)
 {
+	# initialize course mappings to default (0-0, 1-1, 2-2, etc.)
 	for (i = 0; i <= Ce; i++)
 		C[i] = i;
 
@@ -20,21 +21,38 @@ function create_course_permuations(     i,j,q,pos)
 		# for each course (in quarter)
 		for (i = Q[q]; i > 0; i--)
 		{
-			QCpos[q,i] = C[set[q,i]]
-			CQ[C[set[q,i]]]=q;
+#			print q,set[q,i],set_comp[q,i,0],set_comp[q,i,1]
+			c_pos = C[set[q,i]] # map set element to course pos & store
+
+			if (Cimp[c_pos,q]) return 1;
+
+			QCpos[q,i] = c_pos # map set element to course pos
+			CQ[c_pos]=q;
 		}
 				
 		# create index to set_comp elements array
-		delete tmp;
+		delete Ctmp;
 		pos = 0;
+		# for each course (in quarter)
 		for (i = Q[q]; i >= 0; i--)
+			# for each element in complementary set
 			for (j = set_comp[q,i,0]; j <= set_comp[q,i,1]; j++)
-				tmp[pos++] = C[j];
-
+			{
+#				print q,i,j,pos,C[j]
+				Ctmp[pos++] = C[j];
+			}
+			
 		delete C;
+#		print "mapping for Q: "q+1
 		for (i = 0; i < pos; i++)
-			C[i] = tmp[i];
+		{
+			C[i] = Ctmp[i];
+#			print "["i"]",C[i]
+		}
+#		print "*"
 	}
+	
+	return 0;
 }
 
 function print_course_permuations(     i,q)
@@ -134,8 +152,8 @@ function goo(q,pos,Cs,Ce,     i)
 		else
 		{
 			num_imp_c = 0;
-			create_course_permuations()
-			print_course_permuations()
+			if (create_course_permuations() == 0)
+				print_course_permuations()
 #			if (num_imp_c == 0)
 #				print_req_calcs()
 		}
