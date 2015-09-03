@@ -14,6 +14,23 @@ function create_course_permuations(     i,j,q,pos)
 		C[i] = i;
 
 	delete QCpos;
+
+#	print "---"
+	for (q = 0; q < lengthQ; q++)
+	{
+		printf "{ "
+		# for each course (in quarter)
+		for (i = 0; i < Q[q]; i++)
+		{
+#			if (set_comp[q,i,1] >= set_comp[q,i,0])
+#				printf("(%d,%d) ",set_comp[q,i,0],set_comp[q,i,1])
+			printf("%d ",set[q,i])
+		}
+		printf "}"
+	}
+	print
+	
+	return 0;
 	
 	# for each quarter
 	for (q = 0; q < lengthQ; q++)
@@ -34,7 +51,7 @@ function create_course_permuations(     i,j,q,pos)
 		delete Ctmp;
 		pos = 0;
 		# for each course (in quarter)
-		for (i = Q[q]; i >= 0; i--)
+		for (i = 0; i < Q[q]; i++)
 			# for each element in complementary set
 			for (j = set_comp[q,i,0]; j <= set_comp[q,i,1]; j++)
 			{
@@ -63,7 +80,7 @@ function print_course_permuations(     i,q)
 		printf("{ ");
 
 		# for each course (in quarter)
-		for (i = Q[q]; i > 0; i--)
+		for (i = 0; i < Q[q]; i++)
 		{
 			c_pos = QCpos[q,i];
 			printf("%d%s ",CNu[c_pos],Cimp[c_pos,q]?"*":"")
@@ -127,7 +144,8 @@ function foo(q,num_c,     i)
 		print_set_lengths()
 
 		Ce = lengthC-1
-		goo(0,Q[0],0,Ce)
+#		goo(0,Q[0],0,Ce)
+		goo(0,0,0,Ce)
 	
 		return;
 	}
@@ -143,29 +161,31 @@ function goo(q,pos,Cs,Ce,     i)
 {
 #	print q,pos,Cs,Ce
 	
-	if (pos==0)
+	if (pos==Q[q])
 	{
 		set_comp[q,pos,0] = Cs;
 		set_comp[q,pos,1] = Ce;
 		if ((q+1)<lengthQ)
-			goo(q+1,Q[q+1],0,Ce-Q[q])
+			goo(q+1,0,0,Ce-Q[q])
 		else
 		{
 			num_imp_c = 0;
 			if (create_course_permuations() == 0)
-				print_course_permuations()
+			{}
+#				print_course_permuations()
 #			if (num_imp_c == 0)
 #				print_req_calcs()
 		}
 		return;
 	}
 	else
-		for (i = Cs; i <= (Ce-pos+1); i++)
+#		for (i = Cs; i <= (Ce-pos+1); i++)
+		for (i = Cs; i <= Ce; i++) # need to figure this pos out
 		{
-			set[q,pos] = i
-			set_comp[q,pos,0] = Cs;
-			set_comp[q,pos,1] = i-1;
-			goo(q,pos-1,i+1,Ce)
+			set[q,pos] = i # store set element
+			set_comp[q,pos,0] = Cs; # start of gap before set element
+			set_comp[q,pos,1] = i-1; # end of gap before set element
+			goo(q,pos+1,i+1,Ce)
 		}
 }
 
