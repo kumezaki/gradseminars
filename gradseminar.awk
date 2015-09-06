@@ -10,10 +10,8 @@ function print_set_lengths(     i)
 function create_course_permuations(     i,j,q,pos)
 {
 	# initialize course mappings to default (0-0, 1-1, 2-2, etc.)
-	for (i = 0; i <= Ce; i++)
-		C[i] = i;
-
-	delete QCpos;
+#	for (i = 0; i <= Ce; i++)
+#		C[i] = i;
 
 #	print "---"
 	for (q = 0; q < lengthQ; q++)
@@ -32,6 +30,8 @@ function create_course_permuations(     i,j,q,pos)
 	
 	return 0;
 	
+	delete QCpos;
+
 	# for each quarter
 	for (q = 0; q < lengthQ; q++)
 	{
@@ -136,12 +136,15 @@ function print_req_calcs(     r,s,c)
 }
 
 # creates all possible permutations of the number of courses per quarter
-function foo(q,num_c,     i)
+function foo(q,num_c,     i,m)
 {
 	if ((q+1) == lengthQ)
 	{
 		Q[q] = num_c
 		print_set_lengths()
+		
+		for (m_pos = 0; m_pos < lengthC; m_pos++)
+			Cmap[m_pos] = m_pos;
 
 		Ce = lengthC-1
 #		goo(0,Q[0],0,Ce)
@@ -157,21 +160,59 @@ function foo(q,num_c,     i)
 	}
 }
 
-function goo(q,pos,Cs,Ce,     i)
+function goo(q,pos,Cs,Ce,     i,j)
 {
 #	print q,pos,Cs,Ce
-	
+
+	# if pos is # elems in quarter	
 	if (pos==Q[q])
 	{
-		set_comp[q,pos,0] = Cs;
-		set_comp[q,pos,1] = Ce;
+		# store complementary range after last element in set
+		set_comp[q,pos,0] = Cs
+		set_comp[q,pos,1] = Ce
+
+		# print the mapping		
+#		if (m_pos > 0)
+#		{
+#			printf m_pos": "
+#			for (m = 0; m < m_pos; m++)
+#				printf "("m","Cmap[m]") "
+#			print
+#		}
+		m_pos = 0
+
+		printf "Q:%d { ",q
+		# for each course (in quarter)
+		for (i = 0; i <= pos; i++)
+		{
+			if (set_comp[q,i,1] >= set_comp[q,i,0])
+			{
+#				printf "( "
+				for (j = set_comp[q,i,0]; j <= set_comp[q,i,1]; j++)
+				{
+#					printf("[%d]%d ",m_pos,j)
+					Cmap[m_pos++] = j # m_pos is global
+				}
+#				printf ") "
+			}
+			if (i < pos)
+				printf("%d ",Cmap[set[q,i]])
+		}
+		printf "} "
+
+		# check if this is not the last quarter
 		if ((q+1)<lengthQ)
+		{
 			goo(q+1,0,0,Ce-Q[q])
+		}
 		else
 		{
-			num_imp_c = 0;
-			if (create_course_permuations() == 0)
-			{}
+			for (m_pos = 0; m_pos < lengthC; m_pos++)
+				Cmap[m_pos] = m_pos;
+			print
+#			num_imp_c = 0;
+#			if (create_course_permuations() == 0)
+#			{}
 #				print_course_permuations()
 #			if (num_imp_c == 0)
 #				print_req_calcs()
@@ -179,8 +220,7 @@ function goo(q,pos,Cs,Ce,     i)
 		return;
 	}
 	else
-#		for (i = Cs; i <= (Ce-pos+1); i++)
-		for (i = Cs; i <= Ce; i++) # need to figure this pos out
+		for (i = Cs; i <= Ce; i++)
 		{
 			set[q,pos] = i # store set element
 			set_comp[q,pos,0] = Cs; # start of gap before set element
