@@ -148,7 +148,7 @@ function foo(q,num_c,     i,m)
 
 		Ce = lengthC-1
 #		goo(0,Q[0],0,Ce)
-		goo(0,0,0,Ce)
+		goo(0,0,0,Ce,Cmap)
 	
 		return;
 	}
@@ -160,7 +160,7 @@ function foo(q,num_c,     i,m)
 	}
 }
 
-function goo(q,pos,Cs,Ce,     i,j)
+function goo(q,pos,Cs,Ce,Cmap,     i,j,Cmap_next)
 {
 #	print q,pos,Cs,Ce
 
@@ -172,6 +172,7 @@ function goo(q,pos,Cs,Ce,     i,j)
 		set_comp[q,pos,1] = Ce
 
 		# print the mapping		
+#		m_pos = pos
 #		if (m_pos > 0)
 #		{
 #			printf m_pos": "
@@ -191,7 +192,7 @@ function goo(q,pos,Cs,Ce,     i,j)
 				for (j = set_comp[q,i,0]; j <= set_comp[q,i,1]; j++)
 				{
 #					printf("[%d]%d ",m_pos,j)
-					Cmap[m_pos++] = j # m_pos is global
+					Cmap_next[m_pos++] = Cmap[j] # m_pos is global: does it need to be?
 				}
 #				printf ") "
 			}
@@ -203,12 +204,12 @@ function goo(q,pos,Cs,Ce,     i,j)
 		# check if this is not the last quarter
 		if ((q+1)<lengthQ)
 		{
-			goo(q+1,0,0,Ce-Q[q])
+			goo(q+1,0,0,Ce-Q[q],Cmap_next)
 		}
 		else
 		{
-			for (m_pos = 0; m_pos < lengthC; m_pos++)
-				Cmap[m_pos] = m_pos;
+#			for (m_pos = 0; m_pos < lengthC; m_pos++)
+#				Cmap[m_pos] = m_pos;
 			print
 #			num_imp_c = 0;
 #			if (create_course_permuations() == 0)
@@ -225,7 +226,7 @@ function goo(q,pos,Cs,Ce,     i,j)
 			set[q,pos] = i # store set element
 			set_comp[q,pos,0] = Cs; # start of gap before set element
 			set_comp[q,pos,1] = i-1; # end of gap before set element
-			goo(q,pos+1,i+1,Ce)
+			goo(q,pos+1,i+1,Ce,Cmap)
 		}
 }
 
