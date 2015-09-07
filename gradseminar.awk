@@ -197,7 +197,7 @@ function goo(q,pos,Cs,Ce,Cmap,     i,j,Cmap_next)
 #				printf ") "
 			}
 			if (i < pos)
-				printf("%d ",Cmap[set[q,i]])
+				printf("%d%s ",CNu[Cmap[set[q,i]]],Cimp[Cmap[set[q,i]],q]?"*":"")
 		}
 		printf "} "
 
@@ -223,10 +223,17 @@ function goo(q,pos,Cs,Ce,Cmap,     i,j,Cmap_next)
 	else
 		for (i = Cs; i <= Ce; i++)
 		{
-			set[q,pos] = i # store set element
-			set_comp[q,pos,0] = Cs; # start of gap before set element
-			set_comp[q,pos,1] = i-1; # end of gap before set element
-			goo(q,pos+1,i+1,Ce,Cmap)
+			if (Cimp[Cmap[i],q])
+			{
+				print "Q:"q"*"
+			}
+			else
+			{
+				set[q,pos] = i # store set element
+				set_comp[q,pos,0] = Cs; # start of gap before set element
+				set_comp[q,pos,1] = i-1; # end of gap before set element
+				goo(q,pos+1,i+1,Ce,Cmap)
+			}
 		}
 }
 
