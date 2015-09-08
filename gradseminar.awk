@@ -182,7 +182,7 @@ function goo(q,pos,Cs,Ce,Cmap,     i,j,Cmap_next)
 #		}
 		m_pos = 0
 
-		printf "Q:%d { ",q
+#		printf "Q:%d { ",q
 		# for each course (in quarter)
 		for (i = 0; i <= pos; i++)
 		{
@@ -196,10 +196,10 @@ function goo(q,pos,Cs,Ce,Cmap,     i,j,Cmap_next)
 				}
 #				printf ") "
 			}
-			if (i < pos)
-				printf("%d%s ",CNu[Cmap[set[q,i]]],Cimp[Cmap[set[q,i]],q]?"*":"")
+#			if (i < pos)
+#				printf("%d%s ",CNu[Cmap[set[q,i]]],Cimp[Cmap[set[q,i]],q]?"*":"")
 		}
-		printf "} "
+#		printf "} "
 
 		# check if this is not the last quarter
 		if ((q+1)<lengthQ)
@@ -210,7 +210,8 @@ function goo(q,pos,Cs,Ce,Cmap,     i,j,Cmap_next)
 		{
 #			for (m_pos = 0; m_pos < lengthC; m_pos++)
 #				Cmap[m_pos] = m_pos;
-			print
+#			print
+			print_course_permuations()
 #			num_imp_c = 0;
 #			if (create_course_permuations() == 0)
 #			{}
@@ -223,12 +224,13 @@ function goo(q,pos,Cs,Ce,Cmap,     i,j,Cmap_next)
 	else
 		for (i = Cs; i <= Ce; i++)
 		{
-			if (Cimp[Cmap[i],q])
+			if (Cimp[Cmap[i],q] && 1)
 			{
-				print "Q:"q"*"
+#				print "Q:"q"*"
 			}
 			else
 			{
+				QCpos[q,pos] = Cmap[i];
 				set[q,pos] = i # store set element
 				set_comp[q,pos,0] = Cs; # start of gap before set element
 				set_comp[q,pos,1] = i-1; # end of gap before set element
