@@ -96,27 +96,28 @@ function foo(q,num_c,     i,m)
 
 function goo(q,pos,Cs,Ce,Cmap,     i,j,m,Cmap_next)
 {
-	# if pos is # elems in quarter	
+	# if pos is # elems in quarter (i.e., quarter set completed)
 	if (pos==Q[q])
 	{
 		# store complementary range (gap) AFTER last element in set
 		set_comp[q,pos,0] = Cs	# start
 		set_comp[q,pos,1] = Ce	# end
 
-		m = 0;
-		# for each course (in quarter)
-		for (i = 0; i <= pos; i++)
-		{
-			if (set_comp[q,i,1] >= set_comp[q,i,0])
-				for (j = set_comp[q,i,0]; j <= set_comp[q,i,1]; j++)
-					Cmap_next[m++] = Cmap[j]
-
-#			if (i < pos) printf("%d%s ",CNu[Cmap[set[q,i]]],Cimp[Cmap[set[q,i]],q]?"*":"")
-		}
-
 		# check if this is not the last quarter
 		if ((q+1)<lengthQ)
 		{
+			# update Cmap_next (mapping for next quarter)
+			m = 0;
+			# for each course (in quarter)
+			for (i = 0; i <= pos; i++)
+			{
+				if (set_comp[q,i,1] >= set_comp[q,i,0])
+					for (j = set_comp[q,i,0]; j <= set_comp[q,i,1]; j++)
+						Cmap_next[m++] = Cmap[j]
+
+#				if (i < pos) printf("%d%s ",CNu[Cmap[set[q,i]]],Cimp[Cmap[set[q,i]],q]?"*":"")
+			}
+
 			goo(q+1,0,0,Ce-Q[q],Cmap_next)
 		}
 		else
@@ -135,12 +136,15 @@ function goo(q,pos,Cs,Ce,Cmap,     i,j,m,Cmap_next)
 			}
 			else
 			{
-				QCpos[q,pos] = Cmap[i];
-				CQ[Cmap[i]] = q;
-				set[q,pos] = i # store set element
+				set[q,pos] = i 			# store set element
 				# store complementary range (gap) BEFORE set element
 				set_comp[q,pos,0] = Cs;		# start
 				set_comp[q,pos,1] = i-1;	# end
+
+				QCpos[q,pos] = Cmap[i]; # associate quarter set element with course index
+				CQ[Cmap[i]] = q; 		# associate course with quarter
+
+				# next lateral element in branch
 				goo(q,pos+1,i+1,Ce,Cmap)
 			}
 		}
@@ -272,39 +276,41 @@ BEGIN {
 	Sreq[SID,0] = 2
 	SID++
 
-#	SN[SID] = "Cheng, Michele"; SIn[SID] = "MC"
-#	SU[SID,0] = 7; SU[SID,1] = 13; SU[SID,2] = 7;
-#	Sreq[SID,0] = 2
-#	SID++
+	SN[SID] = "Cheng, Michele"; SIn[SID] = "MC"
+	SU[SID,0] = 7; SU[SID,1] = 13; SU[SID,2] = 7;
+	Sreq[SID,0] = 2
+	SID++
 
-#	SN[SID] = "Jones, Molly"; SIn[SID] = "MJ"
-#	SU[SID,0] = 6; SU[SID,1] = 12; SU[SID,2] = 6;
-#	Sreq[SID,0] = 1
-#	SID++
+	SN[SID] = "Jones, Molly"; SIn[SID] = "MJ"
+	SU[SID,0] = 6; SU[SID,1] = 12; SU[SID,2] = 6;
+	Sreq[SID,0] = 1
+	SID++
 	
 	# courses being offered
 	test_Cimp = 1; # global variable to flag if impossible courses should be tested
 	c = 0;
-#	CNu[c] = 0; CNa[c] = "BLANK"; CU[c] = 0; c++;
+	CNu[c] = 0; CNa[c] = "BLANK"; CU[c] = 0; c++;
 	CNu[c] = 131; CNa[c] = "Post-Tonal Theory"; CU[c] = 4; Cimp[c,0] = Cimp[c,1] = 1; c++;
 	CNu[c] = 1310; CNa[c] = "131 sub"; CU[c] = 4; c++;
-#	CNu[c] = 1561; CNa[c] = "156A sub"; CU[c] = 2; c++;
-#	CNu[c] = 1563; CNa[c] = "156C sub"; CU[c] = 2; c++;
-#	CNu[c] = 176; CNa[c] = "Large Ensemble"; CU[c] = 2; c++;
-#	CNu[c] = 200; CNa[c] = "Bibliography"; Cimp[c,1] = Cimp[c,2] = 1; c++;
-#	CNu[c] = 201; CNa[c] = "Theory"; CU[c] = 4; Cimp[c,0] = Cimp[c,2] = 1; c++;
-#	CNu[c] = 209; CNa[c] = "Creative Practices"; Cimp[c,2] = 1; c++;
-#	CNu[c] = 2151; CNa[c] = "Music Technology A"; Cimp[c,1] = Cimp[c,2] = 1; c++;
-#	CNu[c] = 2152; CNa[c] = "Music Technology B"; Cimp[c,0] = Cimp[c,2] = 1; c++;
-#	CNu[c] = 220; CNa[c] = "Mahler"; CU[c] = 4; Cimp[c,1] = Cimp[c,2] = 1; c++;
-#	CNu[c] = 230; CNa[c] = "Contemporary Music Seminar"; CU[c] = 4; Cimp[c,0] = Cimp[c,1] = 1; c++;
+	CNu[c] = 15610; CNa[c] = "156A sub"; CU[c] = 2; c++;
+	CNu[c] = 15630; CNa[c] = "156C sub"; CU[c] = 2; c++;
+	CNu[c] = 176; CNa[c] = "Large Ensemble"; CU[c] = 2; c++;
+	CNu[c] = 200; CNa[c] = "Bibliography"; Cimp[c,1] = Cimp[c,2] = 1; c++;
+	CNu[c] = 201; CNa[c] = "Theory"; CU[c] = 4; Cimp[c,0] = Cimp[c,2] = 1; c++;
+	CNu[c] = 209; CNa[c] = "Creative Practices F"; Cimp[c,1] = Cimp[c,2] = 1; c++;
+	CNu[c] = 209; CNa[c] = "Creative Practices W"; Cimp[c,0] = Cimp[c,2] = 1; c++;
+	CNu[c] = 2151; CNa[c] = "Music Technology A"; Cimp[c,1] = Cimp[c,2] = 1; c++;
+	CNu[c] = 2152; CNa[c] = "Music Technology B"; Cimp[c,0] = Cimp[c,2] = 1; c++;
+	CNu[c] = 220; CNa[c] = "Mahler"; CU[c] = 4; Cimp[c,1] = Cimp[c,2] = 1; c++;
+	CNu[c] = 230; CNa[c] = "Contemporary Music Seminar"; CU[c] = 4; Cimp[c,0] = Cimp[c,1] = 1; c++;
 	CNu[c] = 235; CNa[c] = "Critical Studies"; CU[c] = 4; Cimp[c,0] = Cimp[c,2] = 1; c++;
 	CNu[c] = 236; CNa[c] = "Theory of World Musics"; CU[c] = 4; Cimp[c,0] = Cimp[c,1] = 1; c++;
-#	CNu[c] = 237; CNa[c] = "Lukas tbd"; CU[c] = 4; Cimp[c,0] = Cimp[c,1] = 1; c++;
-#	CNu[c] = 237; CNa[c] = "Persian Classical"; CU[c] = 4; Cimp[c,0] = Cimp[c,1] = 1; c++;
-#	CNu[c] = 2391; CNa[c] = "ICIT Colloquium 2-unit"; CU[c] = 2; Cimp[c,0] = Cimp[c,2] = 1; c++;
-#	CNu[c] = 2392; CNa[c] = "ICIT Colloquium 1-unit"; CU[c] = 1; Cimp[c,0] = Cimp[c,2] = 1; c++;
-#	CNu[c] = 276; CNa[c] = "Contemporary Ensemble"; CU[c] = 2; Cimp[c,0] = 1; c++;
+	CNu[c] = 237; CNa[c] = "Lukas tbd"; CU[c] = 4; Cimp[c,0] = Cimp[c,1] = 1; c++;
+	CNu[c] = 237; CNa[c] = "Persian Classical"; CU[c] = 4; Cimp[c,0] = Cimp[c,1] = 1; c++;
+	CNu[c] = 2391; CNa[c] = "ICIT Colloquium 2-unit"; CU[c] = 2; Cimp[c,0] = Cimp[c,2] = 1; c++;
+	CNu[c] = 2392; CNa[c] = "ICIT Colloquium 1-unit"; CU[c] = 1; Cimp[c,0] = Cimp[c,2] = 1; c++;
+	CNu[c] = 276; CNa[c] = "Contemporary Ensemble W"; CU[c] = 2; Cimp[c,0] = Cimp[c,2] = 1; c++;
+	CNu[c] = 276; CNa[c] = "Contemporary Ensemble S"; CU[c] = 2; Cimp[c,0] = Cimp[c,1] = 1; c++;
 	lengthC = length(CNa)
 
 	# display info for each course
