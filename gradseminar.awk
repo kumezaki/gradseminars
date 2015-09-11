@@ -171,7 +171,7 @@ function hoo(SID,r,     i,j)
 			{
 				R_fulfilled[r] = j;	# remember course that fulfilled requirement
 				Cclaimed[j] = 1
-				hoo(SID,r+1)	
+				hoo(SID,r+1)
 				Cclaimed[j] = 0
 			}
 	}
@@ -196,12 +196,15 @@ function ioo(SID,     Ropt_i,s,c)
 #		print
 		return
 	}
-		
-	for (Ropt_i = 0; SCopt[SID,Ropt_i,0] != ""; Ropt_i++)
-	{
-		SRopt[SID] = Ropt_i
+	
+	if (SCopt[SID,0,0] == "")
 		ioo(SID+1)
-	}
+	else
+		for (Ropt_i = 0; SCopt[SID,Ropt_i,0] != ""; Ropt_i++)
+		{
+			SRopt[SID] = Ropt_i
+			ioo(SID+1)
+		}
 }
 
 BEGIN {
@@ -245,11 +248,11 @@ BEGIN {
 #	Sreq[SID,0] = 6
 #	SID++
 
-	SN[SID] = "Gerrard, Jonathan"; SIn[SID] = "JG"
-	SU[SID,0] = 7; SU[SID,1] = 11; SU[SID,2] = 7;
-	Sreq[SID,0] = 3
-	Sreq[SID,1] = 8
-	SID++
+#	SN[SID] = "Gerrard, Jonathan"; SIn[SID] = "JG"
+#	SU[SID,0] = 7; SU[SID,1] = 11; SU[SID,2] = 7;
+#	Sreq[SID,0] = 3
+#	Sreq[SID,1] = 8
+#	SID++
 
 #	SN[SID] = "Tsai, Cynthia"; SIn[SID] = "CT"
 #	SU[SID,0] = 12; SU[SID,1] = 8; SU[SID,2] = 12;
@@ -271,46 +274,50 @@ BEGIN {
 #	Sreq[SID,0] = 0
 #	SID++
 
-	SN[SID] = "Watson, Jordan"; SIn[SID] = "JW"
-	SU[SID,0] = 7; SU[SID,1] = 13; SU[SID,2] = 7;
-	Sreq[SID,0] = 2
-	SID++
+#	SN[SID] = "Watson, Jordan"; SIn[SID] = "JW"
+#	SU[SID,0] = 7; SU[SID,1] = 13; SU[SID,2] = 7;
+#	Sreq[SID,0] = 2
+#	SID++
 
-	SN[SID] = "Cheng, Michele"; SIn[SID] = "MC"
-	SU[SID,0] = 7; SU[SID,1] = 13; SU[SID,2] = 7;
-	Sreq[SID,0] = 2
-	SID++
+#	SN[SID] = "Cheng, Michele"; SIn[SID] = "MC"
+#	SU[SID,0] = 7; SU[SID,1] = 13; SU[SID,2] = 7;
+#	Sreq[SID,0] = 2
+#	SID++
 
 	SN[SID] = "Jones, Molly"; SIn[SID] = "MJ"
 	SU[SID,0] = 6; SU[SID,1] = 12; SU[SID,2] = 6;
 	Sreq[SID,0] = 1
 	SID++
+
+	SN[SID] = "Allen, G. Thomas"; SIn[SID] = "TA"
+	SU[SID,0] = 8; SU[SID,1] = 8; SU[SID,2] = 4;
+	SID++
 	
 	# courses being offered
 	test_Cimp = 1; # global variable to flag if impossible courses should be tested
 	c = 0;
-	CNu[c] = 0; CNa[c] = "BLANK"; CU[c] = 0; c++;
-	CNu[c] = 131; CNa[c] = "Post-Tonal Theory"; CU[c] = 4; Cimp[c,0] = Cimp[c,1] = 1; c++;
-	CNu[c] = 1310; CNa[c] = "131 sub"; CU[c] = 4; c++;
-	CNu[c] = 15610; CNa[c] = "156A sub"; CU[c] = 2; c++;
-	CNu[c] = 15630; CNa[c] = "156C sub"; CU[c] = 2; c++;
-	CNu[c] = 176; CNa[c] = "Large Ensemble"; CU[c] = 2; c++;
-	CNu[c] = 200; CNa[c] = "Bibliography"; Cimp[c,1] = Cimp[c,2] = 1; c++;
-	CNu[c] = 201; CNa[c] = "Theory"; CU[c] = 4; Cimp[c,0] = Cimp[c,2] = 1; c++;
-	CNu[c] = 209; CNa[c] = "Creative Practices F"; Cimp[c,1] = Cimp[c,2] = 1; c++;
-	CNu[c] = 209; CNa[c] = "Creative Practices W"; Cimp[c,0] = Cimp[c,2] = 1; c++;
-	CNu[c] = 2151; CNa[c] = "Music Technology A"; Cimp[c,1] = Cimp[c,2] = 1; c++;
-	CNu[c] = 2152; CNa[c] = "Music Technology B"; Cimp[c,0] = Cimp[c,2] = 1; c++;
-	CNu[c] = 220; CNa[c] = "Mahler"; CU[c] = 4; Cimp[c,1] = Cimp[c,2] = 1; c++;
-	CNu[c] = 230; CNa[c] = "Contemporary Music Seminar"; CU[c] = 4; Cimp[c,0] = Cimp[c,1] = 1; c++;
-	CNu[c] = 235; CNa[c] = "Critical Studies"; CU[c] = 4; Cimp[c,0] = Cimp[c,2] = 1; c++;
+#	CNu[c] = 0; CNa[c] = "BLANK"; CU[c] = 0; c++;
+#	CNu[c] = 131; CNa[c] = "Post-Tonal Theory"; CU[c] = 4; Cimp[c,0] = Cimp[c,1] = 1; c++;
+#	CNu[c] = 1310; CNa[c] = "131 sub"; CU[c] = 4; c++;
+#	CNu[c] = 15610; CNa[c] = "156A sub"; CU[c] = 2; c++;
+#	CNu[c] = 15630; CNa[c] = "156C sub"; CU[c] = 2; c++;
+#	CNu[c] = 176; CNa[c] = "Large Ensemble"; CU[c] = 2; c++;
+#	CNu[c] = 200; CNa[c] = "Bibliography"; CU[c] = 4; Cimp[c,1] = Cimp[c,2] = 1;c++;
+#	CNu[c] = 201; CNa[c] = "Topics in Analysis"; CU[c] = 4; Cimp[c,0] = Cimp[c,2] = 1; c++;
+#	CNu[c] = 209; CNa[c] = "Creative Practices F"; CU[c] = 4; Cimp[c,1] = Cimp[c,2] = 1; c++;
+#	CNu[c] = 209; CNa[c] = "Creative Practices W"; CU[c] = 4; Cimp[c,0] = Cimp[c,2] = 1; c++;
+#	CNu[c] = 2151; CNa[c] = "Music Technology A"; CU[c] = 4; Cimp[c,1] = Cimp[c,2] = 1; c++;
+#	CNu[c] = 2152; CNa[c] = "Music Technology B"; CU[c] = 4; Cimp[c,0] = Cimp[c,2] = 1; c++;
+#	CNu[c] = 220; CNa[c] = "Mahler"; CU[c] = 4; Cimp[c,1] = Cimp[c,2] = 1; c++;
+#	CNu[c] = 230; CNa[c] = "Contemporary Music Seminar"; CU[c] = 4; Cimp[c,0] = Cimp[c,1] = 1; c++;
+#	CNu[c] = 235; CNa[c] = "Critical Studies"; CU[c] = 4; Cimp[c,0] = Cimp[c,2] = 1; c++;
 	CNu[c] = 236; CNa[c] = "Theory of World Musics"; CU[c] = 4; Cimp[c,0] = Cimp[c,1] = 1; c++;
-	CNu[c] = 237; CNa[c] = "Lukas tbd"; CU[c] = 4; Cimp[c,0] = Cimp[c,1] = 1; c++;
-	CNu[c] = 237; CNa[c] = "Persian Classical"; CU[c] = 4; Cimp[c,0] = Cimp[c,1] = 1; c++;
-	CNu[c] = 2391; CNa[c] = "ICIT Colloquium 2-unit"; CU[c] = 2; Cimp[c,0] = Cimp[c,2] = 1; c++;
-	CNu[c] = 2392; CNa[c] = "ICIT Colloquium 1-unit"; CU[c] = 1; Cimp[c,0] = Cimp[c,2] = 1; c++;
-	CNu[c] = 276; CNa[c] = "Contemporary Ensemble W"; CU[c] = 2; Cimp[c,0] = Cimp[c,2] = 1; c++;
-	CNu[c] = 276; CNa[c] = "Contemporary Ensemble S"; CU[c] = 2; Cimp[c,0] = Cimp[c,1] = 1; c++;
+#	CNu[c] = 237; CNa[c] = "Lukas tbd"; CU[c] = 4; Cimp[c,0] = Cimp[c,1] = 1; c++;
+#	CNu[c] = 237; CNa[c] = "Persian Classical"; CU[c] = 4; Cimp[c,0] = Cimp[c,1] = 1; c++;
+#	CNu[c] = 2391; CNa[c] = "ICIT Colloquium 2-unit"; CU[c] = 2; Cimp[c,0] = Cimp[c,2] = 1; c++;
+#	CNu[c] = 2392; CNa[c] = "ICIT Colloquium 1-unit"; CU[c] = 1; Cimp[c,0] = Cimp[c,2] = 1; c++;
+#	CNu[c] = 276; CNa[c] = "Contemporary Ensemble W"; CU[c] = 2; Cimp[c,0] = Cimp[c,2] = 1; c++;
+#	CNu[c] = 276; CNa[c] = "Contemporary Ensemble S"; CU[c] = 2; Cimp[c,0] = Cimp[c,1] = 1; c++;
 	lengthC = length(CNa)
 
 	# display info for each course
@@ -332,13 +339,16 @@ BEGIN {
 		delete Cclaimed
 		Ropt_i = 0
 		hoo(SID,0)
-		for (Ropt_i = 0; SCopt[SID,Ropt_i,0] != ""; Ropt_i++)
-		{
-			printf("Ropt_i %d: ",Ropt_i)
-			for (c = 0; SCopt[SID,Ropt_i,c] != ""; c++)
-				printf("[req %d] %s ",c,CNa[SCopt[SID,Ropt_i,c]])
-			print
-		}
+		if (SCopt[SID,0,0] == "")
+			print "Ropt_i NONE"
+		else
+			for (Ropt_i = 0; SCopt[SID,Ropt_i,0] != ""; Ropt_i++)
+			{
+				printf("Ropt_i %d: ",Ropt_i)
+				for (c = 0; SCopt[SID,Ropt_i,c] != ""; c++)
+					printf("[req %d] %s ",c,CNa[SCopt[SID,Ropt_i,c]])
+				print
+			}
 		print
 	}
 	
