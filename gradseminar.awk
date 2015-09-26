@@ -7,7 +7,7 @@ function print_set_lengths(     i)
 	return
 }
 
-function print_course_permuations(     i,q)
+function print_course_permutations(     i,q)
 {
 	# for each quarter
 	for (q = 0; q < lengthQ; q++)
@@ -28,26 +28,26 @@ function print_course_permuations(     i,q)
 	
 }
 
-function print_req_calcs(     r,s,c)
+function print_req_calcs(r,     s,q,c)
 {
-	# for each requirement option
-	for (r = 0; r < Rpermu_i; r++)
+	cu_total_over = 0;
+	
+	printf("%d",r)
+	# for each student
+	for (s = 0; s < length(SN); s++)
 	{
-		cu_total_over = 0;
-		
-		printf("%d",r)
-		# for each student
-		for (s = 0; s < length(SN); s++)
-		{
-			printf(" [%s:",SIn[s])
+		printf(" [%s:",SIn[s])
 
-			delete tmp_SU
-			for (q = 0; q < lengthQ; q++)
-			{
-				tmp_SU[q] = SU[s,q]
-#				printf("%s%d",q==0?" ":"|",tmp_SU[q])
-			}
-			
+		delete tmp_SU
+		for (q = 0; q < lengthQ; q++)
+		{
+			tmp_SU[q] = SU[s,q]
+#			printf("%s%d",q==0?" ":"|",tmp_SU[q])
+		}
+		
+		if (Rpermu[r,s,0] == "")
+				printf(" ?")
+		else
 			for (c = 0; Rpermu[r,s,c] != ""; c++)
 			{
 				c_pos = Rpermu[r,s,c]
@@ -55,18 +55,39 @@ function print_req_calcs(     r,s,c)
 				printf(" %d(Q%d:%dU)",CNu[c_pos],CQ[c_pos],CU[c_pos])
 			}
 
-			for (q = 0; q < lengthQ; q++)
-			{
-				diff = tmp_SU[q] - SU_OPT;
-				printf("%s%d%s",q==0?" ":"|",tmp_SU[q],diff>0?"*":"")
-				if (diff > 0)
-					cu_total_over += diff;
-			}
-
-			printf("]")
+		for (q = 0; q < lengthQ; q++)
+		{
+			diff = tmp_SU[q] - SU_OPT;
+			printf("%s%d%s",q==0?" ":"|",tmp_SU[q],diff>0?"*":"")
+			if (diff > 0)
+				cu_total_over += diff;
 		}
-		printf(" %d",cu_total_over)
-		print
+
+		printf("]")
+	}
+	printf(" %d",cu_total_over)
+	print
+	
+	return cu_total_over;
+}
+
+function check_min(cu_total_over)
+{
+	if (cu_total_over <= min_cu_total_over)
+	{
+		min_cu_total_over = cu_total_over
+		
+		if (cu_total_over < min_cu_total_over)
+		{
+			num_min = 0;
+			delete min_courses;
+			delete min_perms;
+		}
+		
+		for (q = 0; q < lengthQ; q++) # for each quarter
+			for (i = 0; i < Q[q]; i++) # for each course (in quarter)
+				min_courses[num_min,q,i] = QCpos[q,i];
+		min_perms[num_min++] = r;
 	}
 }
 
@@ -122,8 +143,10 @@ function goo(q,pos,Cs,Ce,Cmap,     i,j,m,Cmap_next)
 		}
 		else
 		{
-			print_course_permuations()
-			print_req_calcs()
+			print_course_permutations()
+			# for each requirement option
+			for (r = 0; r < Rpermu_i; r++)
+				check_min(print_req_calcs(r))
 		}
 		return;
 	}
@@ -226,9 +249,9 @@ BEGIN {
 	r = 4
 	Req[r,0] = 131;
 	r = 5
-	Req[r,0] = 1561;
+	Req[r,0] = 15610;
 	r = 6
-	Req[r,0] = 1563;
+	Req[r,0] = 15630;
 	r = 7
 	Req[r,0] = 176;
 	r = 8
@@ -237,52 +260,49 @@ BEGIN {
 	# student info
 	SID = 0
 
-#	SN[SID] = "Kwan, Adela"; SIn[SID] = "AK"
-#	SU[SID,0] = 11; SU[SID,1] = 15; SU[SID,2] = 15;
-#	Sreq[SID,0] = 5
-#	Sreq[SID,1] = 6
-#	SID++
+	SN[SID] = "Kwan, Adela"; SIn[SID] = "AK"
+	SU[SID,0] = 11; SU[SID,1] = 15; SU[SID,2] = 15;
+	Sreq[SID,0] = 5
+	Sreq[SID,1] = 6
+	SID++
 
-#	SN[SID] = "Spaulding, Audrey"; SIn[SID] = "AS"
-#	SU[SID,0] = 11; SU[SID,1] = 15; SU[SID,2] = 13;
-#	Sreq[SID,0] = 6
-#	SID++
+	SN[SID] = "Spaulding, Audrey"; SIn[SID] = "AS"
+	SU[SID,0] = 11; SU[SID,1] = 15; SU[SID,2] = 13;
+	Sreq[SID,0] = 6
+	SID++
 
-#	SN[SID] = "Gerrard, Jonathan"; SIn[SID] = "JG"
-#	SU[SID,0] = 7; SU[SID,1] = 11; SU[SID,2] = 7;
-#	Sreq[SID,0] = 3
-#	Sreq[SID,1] = 8
-#	SID++
+	SN[SID] = "Gerrard, Jonathan"; SIn[SID] = "JG"
+	SU[SID,0] = 7; SU[SID,1] = 11; SU[SID,2] = 7;
+	Sreq[SID,0] = 3
+	Sreq[SID,1] = 8
+	SID++
 
-#	SN[SID] = "Tsai, Cynthia"; SIn[SID] = "CT"
-#	SU[SID,0] = 12; SU[SID,1] = 8; SU[SID,2] = 12;
-#	Sreq[SID,0] = 0
-#	SID++
+	SN[SID] = "Tsai, Cynthia"; SIn[SID] = "CT"
+	SU[SID,0] = 12; SU[SID,1] = 8; SU[SID,2] = 12;
+	SID++
 
-#	SN[SID] = "Barb-Mingo, Evyn"; SIn[SID] = "EB-M"
-#	SU[SID,0] = 9; SU[SID,1] = 9; SU[SID,2] = 13;
-#	Sreq[SID,0] = 7
-#	SID++
+	SN[SID] = "Barb-Mingo, Evyn"; SIn[SID] = "EB-M"
+	SU[SID,0] = 9; SU[SID,1] = 9; SU[SID,2] = 13;
+	Sreq[SID,0] = 7
+	SID++
 
-#	SN[SID] = "Okunev, Anna"; SIn[SID] = "AO"
-#	SU[SID,0] = 6; SU[SID,1] = 12; SU[SID,2] = 6;
-#	Sreq[SID,0] = 0
-#	SID++
+	SN[SID] = "Okunev, Anna"; SIn[SID] = "AO"
+	SU[SID,0] = 6; SU[SID,1] = 12; SU[SID,2] = 6;
+	SID++
 
-#	SN[SID] = "Caulkins, Anthony"; SIn[SID] = "AC"
-#	SU[SID,0] = 7; SU[SID,1] = 13; SU[SID,2] = 7;
-#	Sreq[SID,0] = 0
-#	SID++
+	SN[SID] = "Caulkins, Anthony"; SIn[SID] = "AC"
+	SU[SID,0] = 7; SU[SID,1] = 13; SU[SID,2] = 7;
+	SID++
 
-#	SN[SID] = "Watson, Jordan"; SIn[SID] = "JW"
-#	SU[SID,0] = 7; SU[SID,1] = 13; SU[SID,2] = 7;
-#	Sreq[SID,0] = 2
-#	SID++
+	SN[SID] = "Watson, Jordan"; SIn[SID] = "JW"
+	SU[SID,0] = 7; SU[SID,1] = 13; SU[SID,2] = 7;
+	Sreq[SID,0] = 2
+	SID++
 
-#	SN[SID] = "Cheng, Michele"; SIn[SID] = "MC"
-#	SU[SID,0] = 7; SU[SID,1] = 13; SU[SID,2] = 7;
-#	Sreq[SID,0] = 2
-#	SID++
+	SN[SID] = "Cheng, Michele"; SIn[SID] = "MC"
+	SU[SID,0] = 7; SU[SID,1] = 13; SU[SID,2] = 7;
+	Sreq[SID,0] = 2
+	SID++
 
 	SN[SID] = "Jones, Molly"; SIn[SID] = "MJ"
 	SU[SID,0] = 6; SU[SID,1] = 12; SU[SID,2] = 6;
@@ -298,19 +318,19 @@ BEGIN {
 	c = 0;
 #	CNu[c] = 0; CNa[c] = "BLANK"; CU[c] = 0; c++;
 #	CNu[c] = 131; CNa[c] = "Post-Tonal Theory"; CU[c] = 4; Cimp[c,0] = Cimp[c,1] = 1; c++;
-#	CNu[c] = 1310; CNa[c] = "131 sub"; CU[c] = 4; c++;
-#	CNu[c] = 15610; CNa[c] = "156A sub"; CU[c] = 2; c++;
-#	CNu[c] = 15630; CNa[c] = "156C sub"; CU[c] = 2; c++;
-#	CNu[c] = 176; CNa[c] = "Large Ensemble"; CU[c] = 2; c++;
+	CNu[c] = 1310; CNa[c] = "131 sub"; CU[c] = 4; c++;
+	CNu[c] = 15610; CNa[c] = "156A sub"; CU[c] = 2; c++;
+	CNu[c] = 15630; CNa[c] = "156C sub"; CU[c] = 2; c++;
+	CNu[c] = 176; CNa[c] = "Large Ensemble"; CU[c] = 2; c++;
 #	CNu[c] = 200; CNa[c] = "Bibliography"; CU[c] = 4; Cimp[c,1] = Cimp[c,2] = 1;c++;
 #	CNu[c] = 201; CNa[c] = "Topics in Analysis"; CU[c] = 4; Cimp[c,0] = Cimp[c,2] = 1; c++;
 #	CNu[c] = 209; CNa[c] = "Creative Practices F"; CU[c] = 4; Cimp[c,1] = Cimp[c,2] = 1; c++;
 #	CNu[c] = 209; CNa[c] = "Creative Practices W"; CU[c] = 4; Cimp[c,0] = Cimp[c,2] = 1; c++;
 #	CNu[c] = 2151; CNa[c] = "Music Technology A"; CU[c] = 4; Cimp[c,1] = Cimp[c,2] = 1; c++;
 #	CNu[c] = 2152; CNa[c] = "Music Technology B"; CU[c] = 4; Cimp[c,0] = Cimp[c,2] = 1; c++;
-#	CNu[c] = 220; CNa[c] = "Mahler"; CU[c] = 4; Cimp[c,1] = Cimp[c,2] = 1; c++;
-#	CNu[c] = 230; CNa[c] = "Contemporary Music Seminar"; CU[c] = 4; Cimp[c,0] = Cimp[c,1] = 1; c++;
-#	CNu[c] = 235; CNa[c] = "Critical Studies"; CU[c] = 4; Cimp[c,0] = Cimp[c,2] = 1; c++;
+	CNu[c] = 220; CNa[c] = "Mahler"; CU[c] = 4; Cimp[c,1] = Cimp[c,2] = 1; c++;
+	CNu[c] = 230; CNa[c] = "Contemporary Music Seminar"; CU[c] = 4; Cimp[c,0] = Cimp[c,1] = 1; c++;
+	CNu[c] = 235; CNa[c] = "Critical Studies"; CU[c] = 4; Cimp[c,0] = Cimp[c,2] = 1; c++;
 	CNu[c] = 236; CNa[c] = "Theory of World Musics"; CU[c] = 4; Cimp[c,0] = Cimp[c,1] = 1; c++;
 #	CNu[c] = 237; CNa[c] = "Lukas tbd"; CU[c] = 4; Cimp[c,0] = Cimp[c,1] = 1; c++;
 #	CNu[c] = 237; CNa[c] = "Persian Classical"; CU[c] = 4; Cimp[c,0] = Cimp[c,1] = 1; c++;
@@ -368,9 +388,31 @@ BEGIN {
 		print
 	}
 	print
-		
+	
+	min_cu_total_over = 1000000 # a large number
+	num_min = 0;
 	foo(0,lengthC)
-#	print
+	print "minimum total course units: "min_cu_total_over
+	print "occurred "num_min" times"
+	for (i = 0; i < num_min; i++)
+	{
+		printf "%d, %d: ",i,min_perms[i]
+		delete CQ
+		for (q = 0; q < lengthQ; q++) # for each quarter
+		{
+			for (c = 0; min_courses[i,q,c] != ""; c++) # for each course (in quarter)
+			{
+				printf CNu[min_courses[i,q,c]]" "
+				CQ[min_courses[i,q,c]] = q
+			}
+			if (q < lengthQ -1)
+				printf "| "
+		}
+		print
+		print_req_calcs(min_perms[i])
+	}
+	
+	print
 }
 
 {
