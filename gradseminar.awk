@@ -394,25 +394,29 @@ BEGIN {
 	foo(0,lengthC)
 	print "minimum total course units: "min_cu_total_over
 	print "occurred "num_min" times"
+	prev_min_perms = 0
 	for (i = 0; i < num_min; i++)
 	{
-		printf "%d, %d: ",i,min_perms[i]
-		delete CQ
-		for (q = 0; q < lengthQ; q++) # for each quarter
+		if (min_perms[i] <= prev_min_perms)
 		{
-			for (c = 0; min_courses[i,q,c] != ""; c++) # for each course (in quarter)
+			print
+			delete CQ
+			for (q = 0; q < lengthQ; q++) # for each quarter
 			{
-				printf CNu[min_courses[i,q,c]]" "
-				CQ[min_courses[i,q,c]] = q
+				for (c = 0; min_courses[i,q,c] != ""; c++) # for each course (in quarter)
+				{
+					printf CNu[min_courses[i,q,c]]" "
+					CQ[min_courses[i,q,c]] = q
+				}
+				if (q < lengthQ -1)
+					printf "| "
 			}
-			if (q < lengthQ -1)
-				printf "| "
+			print
 		}
-		print
+		printf "%d, %d: ",i,min_perms[i]
+		prev_min_perms = min_perms[i];
 		print_req_calcs(min_perms[i])
 	}
-	
-	print
 }
 
 {
